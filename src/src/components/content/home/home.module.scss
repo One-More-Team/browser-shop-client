@@ -1,0 +1,38 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  height: 100%;
+  background-color: #e1e4e8;
+  padding-left: 4.5rem;
+  color: #000;
+  overflow: auto;
+}
+
+.Section {
+  margin: 2rem;
+}
+
+.Title {
+  font-size: 2rem;
+  background-color: #00000022;
+  padding: 0.5rem 0;
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+
+  span {
+    filter: drop-shadow(2px 4px 2px #00000066);
+  }
+}
+
+.Content {
+  margin-top: 1rem;
+  position: relative;
+  font-size: 2rem;
+}
+
+@media (min-width: 1168px) {
+}
+
+@media (max-width: 670px) {
+}
