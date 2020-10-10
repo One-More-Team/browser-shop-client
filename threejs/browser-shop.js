@@ -387,9 +387,7 @@ window.removeUser = (targetId) => {
   users = users.filter(({ id }) => id !== targetId);
 };
 
-window.syncPositions = (userDatas) => {
-  userDatas.forEach(({ id, position }) => {
-    const user = users.find((user) => user.id === id);
-    if (user) user.mesh.position.copy(position);
-  });
+window.updatePosition = ({ id, position }) => {
+  const user = users.find((user) => user.id === id);
+  if (user) user.mesh.position.copy(position);
 };
