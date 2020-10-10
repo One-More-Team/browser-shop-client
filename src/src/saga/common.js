@@ -143,7 +143,7 @@ function* sendUsersToShop(action) {
 }
 
 function* sendUserToShop(action) {
-  window.addUsers(action.user);
+  window.addUsers([action.user]);
 }
 
 function* clearUserFromShop(action) {
