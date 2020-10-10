@@ -1,20 +1,21 @@
 import { eventChannel } from "redux-saga";
-import { call, put, take, takeLatest } from "redux-saga/effects";
+import { call, delay, put, take, takeLatest } from "redux-saga/effects";
 
 import { rsf } from "../firebase";
 import { SUCCESFUL_AUTH } from "../store/actions/auth";
 import {
   CHAT_MESSAGE_SEND,
   CONNECT_TO_WS,
+  CONNECTED_TO_WS_EMULATE,
   saveId,
   saveChatMessage,
-  SAVE_ID,
-  SET_TEST_DATA,
+  connectedToWS,
+  connectedToWSEmulate,
 } from "../store/actions/common";
 
 const INIT = "init";
 const SEND_CHAT_MESSAGE = "sendChatMessage";
-const wsUri = "ws://192.168.2.112:8081/";
+const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
 function* chatMessageSend(action) {
@@ -24,8 +25,6 @@ function* chatMessageSend(action) {
 function* createWebSocket(action) {
   console.log("test 2");
   websocket = new WebSocket(wsUri);
-
-  websocket.onopen = (evt) => onOpen(evt);
   websocket.onclose = (evt) => onClose(evt);
   websocket.onerror = (evt) => onError(evt);
 
@@ -38,6 +37,12 @@ function* createWebSocket(action) {
 
 function* subscribe(socket) {
   return new eventChannel((emit) => {
+    socket.onopen = (evt) => {
+      writeToScreen("CONNECTED");
+      emit(connectedToWSEmulate());
+      doSend('{"header":"init","data":{"name":"Tibikeee"}}');
+    };
+
     socket.onmessage = (evt) => {
       let rawData = JSON.parse(evt.data);
       let command = rawData.header;
@@ -65,10 +70,7 @@ function writeToScreen(message) {
   console.log(`${message}`);
 }
 
-function onOpen(evt) {
-  writeToScreen("CONNECTED");
-  doSend('{"header":"init","data":{"name":"Tibikeee"}}');
-}
+function onOpen(evt) {}
 
 function onClose(evt) {
   writeToScreen("DISCONNECTED");
@@ -92,13 +94,15 @@ function doSend(message) {
   });
 } */
 
-function* callSaveId(id) {
-  yield put(saveId(id));
+function* emulateCOnnected() {
+  yield delay(2000);
+  yield put(connectedToWS());
 }
 
 function* Common() {
   yield takeLatest(CONNECT_TO_WS, createWebSocket);
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
+  yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateCOnnected);
 }
 
 export default Common;

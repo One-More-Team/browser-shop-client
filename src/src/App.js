@@ -7,6 +7,7 @@ import Auth from "./components/auth/auth";
 import Home from "./components/content/home/home";
 import Footer from "./components/footer/footer";
 import SideBar from "./components/sidebar/sidebar";
+import Chat from "./components/chat/chat";
 
 import "./App.css";
 import { useSelector } from "react-redux";
@@ -29,6 +30,7 @@ const App = () => {
                 <div />
               </Route>
             </Switch>
+            <Chat />
           </>
         ) : (
           <Auth />

@@ -85,3 +85,8 @@
     color: #98cb37;
   }
 }
+
+.slideOut {
+  left: -100%;
+  transition: left 0.5s;
+}
