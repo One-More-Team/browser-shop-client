@@ -1,7 +1,13 @@
-import { SET_TEST_DATA } from "../actions/common";
+import {
+  SAVE_ARRIWED_CHAT_MESSAGE,
+  SAVE_ID,
+  SET_TEST_DATA,
+} from "../actions/common";
 
 const initialState = {
   testData: "Initial test data",
+  id: "",
+  messages: [],
 };
 
 const commonReducer = (state = initialState, action) => {
@@ -10,6 +16,11 @@ const commonReducer = (state = initialState, action) => {
       return {
         ...state,
         testData: action.testData,
+      };
+    case SAVE_ID:
+      return {
+        ...state,
+        id: action.id,
       };
     default:
       return state;

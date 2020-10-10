@@ -18,12 +18,18 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "eslint": "^6.6yarn audit.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.21.4",
+    "eslint-plugin-react-hooks": "^4.1.2",
     "redux-devtools": "^3.7.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --no-cache",
     "eject": "react-scripts eject"
   },
   "browserslist": {
