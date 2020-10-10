@@ -14,6 +14,7 @@ let controls;
 let time = Date.now();
 let textureAssets = {};
 let lastSyncTime = 0;
+let lastSyncedPosition = { x: 0, y: 0, z: 0 };
 let users = [];
 
 let _serverCall = (args) => {};
@@ -321,11 +322,22 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0 /* && lastSyncTime++ > 10 */) {
-    _serverCall(
-      `{"header":"updatePosition","data":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}`
-    );
-    lastSyncTime = 0;
+  if (users.length > 0 && lastSyncTime++ > 1) {
+    const currentPosition = {
+      x: users[0].body.position.x,
+      y: users[0].body.position.y,
+      z: users[0].body.position.z,
+    };
+    if (
+      lastSyncedPosition.x != currentPosition.x ||
+      lastSyncedPosition.y != currentPosition.y ||
+      lastSyncedPosition.z != currentPosition.z
+    ) {
+      _serverCall(
+        `{"header":"updatePosition","data":{"x":"${currentPosition.x}", "y":"${currentPosition.y}", "z":"${currentPosition.z}"}}`
+      );
+      lastSyncTime = 0;
+    }
   }
 
   if (USE_DEBUG_RENDERER) debugRenderer.update();
