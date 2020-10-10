@@ -13,6 +13,7 @@ let renderer;
 let controls;
 let time = Date.now();
 let textureAssets = {};
+let lastSyncTime = 0;
 
 let _serverCall = (args) => {};
 
@@ -162,7 +163,7 @@ const createSkyBox = () => {
   scene.background = textureEquirec;
 };
 
-const createUser = ({ id, position, isOwn, color }) => {
+const createUser = ({ id, name, position, isOwn, color }) => {
   let mesh = null;
   let body = null;
 
@@ -185,6 +186,7 @@ const createUser = ({ id, position, isOwn, color }) => {
 
   users.push({
     id,
+    name,
     body,
     mesh,
     serverPosition: { x: position.x, y: position.y, z: position.z },
@@ -326,16 +328,18 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0)
+  if (users.length > 0 && lastSyncTime++ > 10) {
     _serverCall(
       `{"header":"updatePosition","data":{"position":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}}`
     );
+    lastSyncTime = 0;
+  }
 
   if (USE_DEBUG_RENDERER) debugRenderer.update();
   time = Date.now();
 };
 
-window.startBrowserShop = ({ serverCall, onReady, userName }) => {
+window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
   _serverCall = serverCall;
   loadTextures(assetConfig.textures, () => {
     initCannonJS();
@@ -343,28 +347,40 @@ window.startBrowserShop = ({ serverCall, onReady, userName }) => {
     createSkyBox();
     loadLevel(() => {
       createUser({
-        id: userName,
+        id: id,
+        name: userName,
         isOwn: true,
         position: { x: 40, y: 0.5, z: 10 },
       });
       controls = new PointerLockControls(camera, users[0].body);
       scene.add(controls.getObject());
-
-      createUser({
-        id: "Tibi",
-        isOwn: false,
-        color: 0xffff00,
-        position: { x: 45, y: 0.5, z: 10 },
-      });
-      createUser({
-        id: "Ricsi",
-        isOwn: false,
-        color: 0x0000ff,
-        position: { x: 45, y: 0.5, z: 6 },
-      });
       init();
       animate();
       onReady();
     });
   });
+};
+
+const getUserColor = () => {
+  const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0x00ffff, 0xffffff];
+  return colors[users.length];
+};
+
+window.addUsers = (users) => {
+  users.forEach(({ id, name, position }) => {
+    createUser({
+      id: id,
+      name: name,
+      isOwn: false,
+      color: getUserColor(),
+      position: position,
+    });
+  });
+};
+
+window.removeUser = (targetId) => {
+  var user = users.find(({ id }) => id === targetId);
+  scene.remove(user.mesh);
+
+  users = users.filter(({ id }) => id !== targetId);
 };
