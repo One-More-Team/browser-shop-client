@@ -322,7 +322,7 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0 && lastSyncTime++ > 10) {
+  if (users.length > 0 /* && lastSyncTime++ > 10 */) {
     _serverCall(
       `{"header":"updatePosition","data":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}`
     );
