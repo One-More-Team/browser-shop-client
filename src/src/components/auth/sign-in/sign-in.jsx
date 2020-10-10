@@ -6,6 +6,7 @@ import authStyles from "../auth.module.scss";
 import formStyle from "../../../common/style/form.module.scss";
 import { useDispatch } from "react-redux";
 import { succesfulAuth } from "../../../store/actions/auth";
+import logo from "../../../asset/img/logo_final_transparent.png";
 
 const SignIn = ({ toggleAuthType }) => {
   const { register, handleSubmit, errors } = useForm();
@@ -33,7 +34,7 @@ const SignIn = ({ toggleAuthType }) => {
   return (
     <div className={authStyles.Wrapper}>
       <form className={authStyles.Form} onSubmit={handleSubmit(onSignIn)}>
-        <h1>Enter to Browser Shop</h1>
+        <img src={logo} alt="Logo" className={authStyles.Logo} />
         <div className={authStyles.InputBlock}>
           <input
             className={formStyle.Input}
@@ -48,7 +49,7 @@ const SignIn = ({ toggleAuthType }) => {
               {serverError?.message || "This field is required"}
             </span>
           )}
-          <i className={`fas fa-user ${authStyles.InputIcon}`}></i>
+          <i className={`fas fa-at ${authStyles.InputIcon}`}></i>
         </div>
         <div className={authStyles.InputBlock}>
           <input

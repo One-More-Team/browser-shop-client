@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connectWS } from "../../../store/actions/common";
 import { GetTestData } from "../../../store/selectors/common";
+import Chat from "../../chat/chat";
 
 import styles from "./home.module.scss";
 
@@ -14,15 +15,18 @@ const Home = () => {
   };
 
   return (
-    <div className={styles.Container}>
-      <div className={styles.Section}>
-        Simple Section
-        {testData}
+    <>
+      <div className={styles.Container}>
+        <div className={styles.Section}>
+          Simple Section
+          {testData}
+        </div>
+        <div role="button" onClick={testConnection}>
+          Test Connection
+        </div>
       </div>
-      <div role="button" onClick={testConnection}>
-        Test Connection
-      </div>
-    </div>
+      <Chat />
+    </>
   );
 };
 

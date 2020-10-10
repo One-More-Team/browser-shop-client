@@ -58,12 +58,13 @@
     margin: 5px;
 
     &:hover {
-      color: #2ea44f;
+      color: #98cb37;
     }
 
     .Icon {
       font-size: 1.5rem;
       margin-right: 1rem;
+      min-width: 27px;
     }
 
     .InstaIcon {
@@ -81,6 +82,6 @@
   }
 
   .SelectedItem {
-    color: #2ea44f;
+    color: #98cb37;
   }
 }

@@ -19,14 +19,14 @@ const SideBar = () => {
             <div className={styles.Label}>Home</div>
           </div>
         </Link>
-        <Link to="/sample">
+        <Link to="/account">
           <div
             className={`${styles.Item} ${
-              location.pathname === "/sample" && styles.SelectedItem
+              location.pathname === "/account" && styles.SelectedItem
             }`}
           >
-            <i className={`${styles.Icon} ${"fas fa-spell-check"}`}></i>
-            <div className={styles.Label}>Sample</div>
+            <i className={`${styles.Icon} ${"fas fa-user"}`}></i>
+            <div className={styles.Label}>My Account</div>
           </div>
         </Link>
       </div>
