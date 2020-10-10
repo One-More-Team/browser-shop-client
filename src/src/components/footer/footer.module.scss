@@ -3,11 +3,17 @@
   font-size: 1em;
   font-weight: bold;
   padding: 2em 0 2em 4.5em;
-  flex-shrink: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 2rem;
-  flex-direction: column;
-  flex-shrink: 0;
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  background-color: white;
+  width: 100%;
+}
+
+.slideOut {
+  bottom: -100px;
+  transition: bottom 0.5s;
 }

@@ -2,7 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendChatMessage } from "../../store/actions/common";
 import styles from "./chat.module.scss";
-import { GetMyId, GetChatMessages } from "../../store/selectors/common";
+import {
+  GetMyId,
+  GetChatMessages,
+  GetConnectionStatus,
+} from "../../store/selectors/common";
+import { connectionState } from "../../enums/enums";
 
 const Chat = () => {
   const inputField = useRef(null);
@@ -12,6 +17,7 @@ const Chat = () => {
   const myId = useSelector(GetMyId);
 
   const chatMessages = useSelector(GetChatMessages);
+  const connectionStatus = useSelector(GetConnectionStatus);
 
   const sendMessageButton = () => {
     dispatch(sendChatMessage(inputField.current.value));
@@ -25,37 +31,43 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    chatFlowContainer.current.scrollTop =
-      chatFlowContainer.current.scrollHeight;
+    if (chatFlowContainer.current != null) {
+      chatFlowContainer.current.scrollTop =
+        chatFlowContainer.current.scrollHeight;
+    }
   }, [chatMessages]);
 
   return (
-    <div className={styles["wrapper-chat"]}>
-      <div className={styles["wrapper-header"]}>Browser Shop Chat</div>
-      <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
-        {chatMessages.map((data) => {
-          return data.id === myId ? (
-            <div key={data.uid} className={styles["message-own"]}>
-              {data.message}
-            </div>
-          ) : (
-            <div key={data.uid} className={styles["message-income"]}>
-              {data.message}
-            </div>
-          );
-        })}
-      </div>
-      <div className={styles["wrapper-input"]}>
-        <input
-          ref={inputField}
-          type="text"
-          className={styles["msg-input"]}
-          placeholder="Enter your message..."
-          onKeyDown={sendMessage}
-        />
-        <button onClick={sendMessageButton}>Send</button>
-      </div>
-    </div>
+    <>
+      {connectionStatus === connectionState.CONNECTION_CONNECTED && (
+        <div className={styles["wrapper-chat"]}>
+          <div className={styles["wrapper-header"]}>Browser Shop Chat</div>
+          <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
+            {chatMessages.map((data) => {
+              return data.id === myId ? (
+                <div key={data.uid} className={styles["message-own"]}>
+                  {data.message}
+                </div>
+              ) : (
+                <div key={data.uid} className={styles["message-income"]}>
+                  {data.message}
+                </div>
+              );
+            })}
+          </div>
+          <div className={styles["wrapper-input"]}>
+            <input
+              ref={inputField}
+              type="text"
+              className={styles["msg-input"]}
+              placeholder="Enter your message..."
+              onKeyDown={sendMessage}
+            />
+            <button onClick={sendMessageButton}>Send</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
