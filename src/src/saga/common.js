@@ -18,6 +18,7 @@ import {
   clearUser,
   syncPosition,
   SAVE_USERS,
+  CLEAR_USER,
 } from "../store/actions/common";
 import { GetDisplayName } from "../store/selectors/common";
 
@@ -138,11 +139,16 @@ function* sendUsersToShop(action) {
   window.addUsers(action.users);
 }
 
+function* clearUserFromShop(action) {
+  window.addUsers(action.userID);
+}
+
 function* Common() {
   yield takeLatest(CONNECT_TO_WS, createWebSocket);
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
   yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateConnected);
   yield takeLatest(SAVE_USERS, sendUsersToShop);
+  yield takeLatest(CLEAR_USER, clearUserFromShop);
 }
 
 export default Common;
