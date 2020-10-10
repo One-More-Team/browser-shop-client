@@ -16,7 +16,14 @@ export const SAVE_USERS = "SAVE_USERS";
 export const SAVE_USER = "SAVE_USER";
 export const CLEAR_USER = "CLEAR_USER";
 
+export const UPDATE_POSITIONS = "UPDATE_POSITIONS";
+
 export const SAVE_PRODUCTS = "SAVE_PRODUCTS";
+
+export const updatePositions = (position) => ({
+  type: UPDATE_POSITIONS,
+  position,
+});
 
 export const saveUsers = (users) => ({
   type: SAVE_USERS,

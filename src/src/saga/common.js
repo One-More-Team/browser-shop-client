@@ -20,6 +20,8 @@ import {
   SAVE_USERS,
   CLEAR_USER,
   SAVE_USER,
+  updatePositions,
+  UPDATE_POSITIONS,
 } from "../store/actions/common";
 import { GetDisplayName, GetMyId } from "../store/selectors/common";
 
@@ -27,6 +29,8 @@ const INIT = "init";
 const SEND_CHAT_MESSAGE = "sendChatMessage";
 const JOIN = "join";
 const LEAVE = "leave";
+const UPDATEPOSITION = "updatePosition";
+
 const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
@@ -72,6 +76,10 @@ function* subscribe(socket) {
         }
         case LEAVE: {
           emit(clearUser(rawData.data));
+          break;
+        }
+        case UPDATEPOSITION: {
+          emit(updatePositions(rawData.data));
           break;
         }
         default: {
@@ -150,6 +158,13 @@ function* clearUserFromShop(action) {
   window.removeUser(action.userID);
 }
 
+function* sendPositionsForShop(action) {
+  const myId = yield select(GetMyId);
+  if (myId == action.position.id) {
+    window.updatePosition(action.position);
+  }
+}
+
 function* Common() {
   yield takeLatest(CONNECT_TO_WS, createWebSocket);
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
@@ -157,6 +172,7 @@ function* Common() {
   yield takeLatest(SAVE_USERS, sendUsersToShop);
   yield takeLatest(SAVE_USER, sendUserToShop);
   yield takeLatest(CLEAR_USER, clearUserFromShop);
+  yield takeLatest(UPDATE_POSITIONS, sendPositionsForShop);
 }
 
 export default Common;
