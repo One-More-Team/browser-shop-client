@@ -18,7 +18,8 @@ import {
   clearUser,
   syncPosition,
   SAVE_USERS,
-  CLEAR_USER,, SAVE_USER
+  CLEAR_USER,
+  SAVE_USER,
 } from "../store/actions/common";
 import { GetDisplayName, GetMyId } from "../store/selectors/common";
 
