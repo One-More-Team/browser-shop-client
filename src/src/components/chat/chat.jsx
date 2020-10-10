@@ -5,10 +5,10 @@ import styles from "./chat.module.scss";
 import {
   GetMyId,
   GetChatMessages,
-  GetConnectionStatus,
+  GetBrowserShopState,
   GetChatUsers,
 } from "../../store/selectors/common";
-import { connectionState } from "../../enums/enums";
+import { browserShopState } from "../../enums/enums";
 
 const Chat = () => {
   const inputField = useRef(null);
@@ -18,7 +18,7 @@ const Chat = () => {
   const myId = useSelector(GetMyId);
 
   const chatMessages = useSelector(GetChatMessages);
-  const connectionStatus = useSelector(GetConnectionStatus);
+  const _browserShopState = useSelector(GetBrowserShopState);
   const chatUsers = useSelector(GetChatUsers);
 
   const sendMessageButton = () => {
@@ -41,7 +41,7 @@ const Chat = () => {
 
   return (
     <>
-      {connectionStatus === connectionState.CONNECTION_CONNECTED && (
+      {_browserShopState === browserShopState.READY && (
         <div className={styles["wrapper-chat"]}>
           <div className={styles["wrapper-header"]}>
             Browser Shop Chat ({chatUsers.length})

@@ -9,6 +9,8 @@ export const CHAT_MESSAGE_SEND = "CHAT_MESSAGE_SEND";
 export const SAVE_ID = "SAVE_ID";
 export const GET_ID = "GET_ID";
 
+export const ON_BROWSER_SHOP_READY = "ON_BROWSER_SHOP_READY";
+
 export const SAVE_USERS = "SAVE_USERS";
 export const SAVE_USER = "SAVE_USER";
 export const CLEAR_USER = "CLEAR_USER";
@@ -61,4 +63,8 @@ export const connectedToWS = () => ({
 
 export const connectedToWSEmulate = () => ({
   type: CONNECTED_TO_WS_EMULATE,
+});
+
+export const onBrowserShopReady = () => ({
+  type: ON_BROWSER_SHOP_READY,
 });

@@ -8,6 +8,8 @@ const GetConnectionStatus = (state) => state.commonReducer.connectionStatus;
 
 const GetDisplayName = (state) => state.commonReducer.displayName;
 
+const GetBrowserShopState = (state) => state.commonReducer.browserShopState;
+
 const GetChatUsers = (state) => state.commonReducer.clientList;
 
 export {
@@ -16,5 +18,6 @@ export {
   GetChatMessages,
   GetConnectionStatus,
   GetDisplayName,
+  GetBrowserShopState,
   GetChatUsers,
 };

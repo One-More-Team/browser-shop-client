@@ -1,5 +1,5 @@
 import { eventChannel } from "redux-saga";
-import { call, delay, put, take, select, takeLatest } from "redux-saga/effects";
+import { call, put, take, select, takeLatest, delay } from "redux-saga/effects";
 
 import { rsf } from "../firebase";
 import { SUCCESFUL_AUTH } from "../store/actions/auth";
@@ -11,6 +11,7 @@ import {
   saveChatMessage,
   connectedToWS,
   connectedToWSEmulate,
+  onBrowserShopReady,
   saveProducts,
   saveUsers,
   saveUser,
@@ -26,7 +27,7 @@ const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
 function* chatMessageSend(action) {
-  doSend(`{"header":"sendChatMessage","data":"${action.message}"}`);
+  yield call(doSend, `{"header":"sendChatMessage","data":"${action.message}"}`);
 }
 
 function* createWebSocket(action) {
@@ -101,23 +102,27 @@ function doSend(message) {
   websocket.send(message);
 }
 
-/* function* fetchInitialData(action) {
-  const testData = yield call(rsf.firestore.getDocument, "data/test");
-
-  yield put({
-    type: SET_TEST_DATA,
-    testData: testData.data(),
-  });
-} */
-
 function* emulateConnected() {
-  //window.startBrowserShop();
   yield delay(2000);
   yield put(connectedToWS());
-
   const userName = yield select(GetDisplayName);
-
   yield call(doSend, `{"header":"init","data":{"name":"${userName}"}}`);
+
+  const waitChannel = eventChannel((emitter) => {
+    window.startBrowserShop({
+      serverCall: websocket.send,
+      userName,
+      onReady: () => {
+        console.log("Browser Shop is ready!");
+        emitter(onBrowserShopReady());
+      },
+    });
+    return () => {};
+  });
+  while (true) {
+    let action = yield take(waitChannel);
+    yield put(action);
+  }
 }
 
 function* Common() {

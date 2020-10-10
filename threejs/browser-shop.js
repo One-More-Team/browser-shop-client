@@ -316,7 +316,7 @@ const animate = () => {
 
   world.step(1 / 60);
   users.forEach((user, index) => {
-    if (index > 0) {
+    if (index > 0 && user.mesh) {
       user.mesh.position.copy(user.serverPosition);
     }
   });
@@ -328,14 +328,14 @@ const animate = () => {
   time = Date.now();
 };
 
-window.startBrowserShop = () => {
+window.startBrowserShop = ({ serverCall, onReady, userName }) => {
   loadTextures(assetConfig.textures, () => {
     initCannonJS();
     initThreeJS();
     createSkyBox();
     loadLevel(() => {
       createUser({
-        id: "NewKrok",
+        id: userName,
         isOwn: true,
         position: { x: 40, y: 0.5, z: 10 },
       });
@@ -356,6 +356,7 @@ window.startBrowserShop = () => {
       });
       init();
       animate();
+      onReady();
     });
   });
 };
