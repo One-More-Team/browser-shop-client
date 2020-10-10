@@ -329,7 +329,7 @@ const animate = () => {
 
   if (users.length > 0 && lastSyncTime++ > 10) {
     _serverCall(
-      `{"header":"updatePosition","position":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}`
+      `{"header":"updatePosition","data":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}`
     );
     lastSyncTime = 0;
   }
