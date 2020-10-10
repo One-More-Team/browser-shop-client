@@ -6,6 +6,7 @@ import {
   GetMyId,
   GetChatMessages,
   GetConnectionStatus,
+  GetChatUsers,
 } from "../../store/selectors/common";
 import { connectionState } from "../../enums/enums";
 
@@ -18,6 +19,7 @@ const Chat = () => {
 
   const chatMessages = useSelector(GetChatMessages);
   const connectionStatus = useSelector(GetConnectionStatus);
+  const chatUsers = useSelector(GetChatUsers);
 
   const sendMessageButton = () => {
     dispatch(sendChatMessage(inputField.current.value));
@@ -41,7 +43,17 @@ const Chat = () => {
     <>
       {connectionStatus === connectionState.CONNECTION_CONNECTED && (
         <div className={styles["wrapper-chat"]}>
-          <div className={styles["wrapper-header"]}>Browser Shop Chat</div>
+          <div className={styles["wrapper-header"]}>
+            Browser Shop Chat ({chatUsers.length})
+          </div>
+          <div className={styles["wrapper-users"]}>
+            {chatUsers.map((data) => (
+              <div className={styles["wrapper-users-instance"]}>
+                <div className={styles["user-avatar"]} />
+                {data.name}
+              </div>
+            ))}
+          </div>
           <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
             {chatMessages.map((data) => {
               return data.id === myId ? (

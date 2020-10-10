@@ -8,10 +8,13 @@ const GetConnectionStatus = (state) => state.commonReducer.connectionStatus;
 
 const GetDisplayName = (state) => state.commonReducer.displayName;
 
+const GetChatUsers = (state) => state.commonReducer.clientList;
+
 export {
   GetTestData,
   GetMyId,
   GetChatMessages,
   GetConnectionStatus,
   GetDisplayName,
+  GetChatUsers,
 };

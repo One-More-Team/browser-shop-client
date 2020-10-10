@@ -11,11 +11,17 @@ import {
   saveChatMessage,
   connectedToWS,
   connectedToWSEmulate,
+  saveProducts,
+  saveUsers,
+  saveUser,
+  clearUser,
 } from "../store/actions/common";
 import { GetDisplayName } from "../store/selectors/common";
 
 const INIT = "init";
 const SEND_CHAT_MESSAGE = "sendChatMessage";
+const JOIN = "join";
+const LEAVE = "leave";
 const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
@@ -51,10 +57,20 @@ function* subscribe(socket) {
       switch (command) {
         case INIT: {
           emit(saveId(rawData.data.id));
+          emit(saveProducts(rawData.data.products));
+          emit(saveUsers(rawData.data.clientList));
           break;
         }
         case SEND_CHAT_MESSAGE: {
           emit(saveChatMessage(rawData.data));
+          break;
+        }
+        case JOIN: {
+          emit(saveUser(rawData.data));
+          break;
+        }
+        case LEAVE: {
+          emit(clearUser(rawData.data));
           break;
         }
         default: {
@@ -95,7 +111,7 @@ function doSend(message) {
 } */
 
 function* emulateConnected() {
-  window.startBrowserShop();
+  //window.startBrowserShop();
   yield delay(2000);
   yield put(connectedToWS());
 
