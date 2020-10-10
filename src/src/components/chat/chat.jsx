@@ -48,7 +48,7 @@ const Chat = () => {
           </div>
           <div className={styles["wrapper-users"]}>
             {chatUsers.map((data) => (
-              <div className={styles["wrapper-users-instance"]}>
+              <div key={data.id} className={styles["wrapper-users-instance"]}>
                 <div className={styles["user-avatar"]} />
                 {data.name}
               </div>
