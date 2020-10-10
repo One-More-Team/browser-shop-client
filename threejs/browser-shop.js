@@ -14,10 +14,9 @@ let controls;
 let time = Date.now();
 let textureAssets = {};
 let lastSyncTime = 0;
+let users = [];
 
 let _serverCall = (args) => {};
-
-const users = [];
 
 const initCannonJS = () => {
   world = new CANNON.World();
@@ -217,7 +216,7 @@ function init() {
       } else {
         controls.enabled = false;
 
-        blocker.style.display = "block";
+        blocker.style.display = "flex";
 
         instructions.style.display = "";
       }
