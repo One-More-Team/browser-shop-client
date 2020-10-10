@@ -96,7 +96,11 @@ function onError(evt) {
 }
 
 function doSend(message) {
-  writeToScreen(`<-----   ${message}`);
+  var json = JSON.parse(message);
+  if (!["updatePosition"].find((func) => func == json.header)) {
+    writeToScreen(`<-----   ${message}`);
+  }
+
   websocket.send(message);
 }
 
