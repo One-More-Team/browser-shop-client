@@ -1,20 +1,23 @@
-export const SET_TEST_DATA = "SET_TEST_DATA";
 export const SEND_CHAT_MESSAGE = "SEND_CHAT_MESSAGE";
 export const CONNECT_TO_WS = "CONNECT_WS";
 
-export const SAVE_ARRIWED_CHAT_MESSAGE = "SAVE_ARRIWED_CHAT_MESSAGE";
+export const CHAT_MESSAGE_RECEIVE = "CHAT_MESSAGE_RECEIVE";
+export const CHAT_MESSAGE_SEND = "CHAT_MESSAGE_SEND";
 
 export const SAVE_ID = "SAVE_ID";
 export const GET_ID = "GET_ID";
 
-export const setTestData = (testData) => ({ type: SET_TEST_DATA, testData });
-
-export const saveChatMessage = (message) => ({
-  type: SET_TEST_DATA,
+export const sendChatMessage = (message) => ({
+  type: CHAT_MESSAGE_SEND,
   message,
 });
 
-export const saveId = (id) => () => ({
+export const saveChatMessage = (message) => ({
+  type: CHAT_MESSAGE_RECEIVE,
+  message,
+});
+
+export const saveId = (id) => ({
   type: SAVE_ID,
   id,
 });

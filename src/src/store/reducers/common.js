@@ -1,7 +1,7 @@
 import {
-  SAVE_ARRIWED_CHAT_MESSAGE,
+  CHAT_MESSAGE_RECEIVE,
   SAVE_ID,
-  SET_TEST_DATA,
+  SEND_CHAT_MESSAGE,
 } from "../actions/common";
 
 const initialState = {
@@ -10,17 +10,22 @@ const initialState = {
   messages: [],
 };
 
+let uniqueChatId = 0;
+
 const commonReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_TEST_DATA:
-      return {
-        ...state,
-        testData: action.testData,
-      };
     case SAVE_ID:
       return {
         ...state,
         id: action.id,
+      };
+    case CHAT_MESSAGE_RECEIVE:
+      return {
+        ...state,
+        messages: [
+          ...state.messages,
+          { uid: uniqueChatId++, ...action.message },
+        ],
       };
     default:
       return state;
