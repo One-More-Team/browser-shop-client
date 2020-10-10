@@ -140,7 +140,7 @@ function* sendUsersToShop(action) {
 }
 
 function* clearUserFromShop(action) {
-  window.addUsers(action.userID);
+  window.removeUser(action.userID);
 }
 
 function* Common() {
