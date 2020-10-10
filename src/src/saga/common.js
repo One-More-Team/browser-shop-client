@@ -16,7 +16,7 @@ import {
   saveUsers,
   saveUser,
   clearUser,
-  syncPosition,
+  syncPosition,, SAVE_USERS
 } from "../store/actions/common";
 import { GetDisplayName } from "../store/selectors/common";
 
