@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendChatMessage } from "../../store/actions/common";
 import styles from "./chat.module.scss";
@@ -6,6 +6,7 @@ import { GetMyId, GetChatMessages } from "../../store/selectors/common";
 
 const Chat = () => {
   const inputField = useRef(null);
+  const chatFlowContainer = useRef(null);
   const dispatch = useDispatch();
 
   const myId = useSelector(GetMyId);
@@ -23,10 +24,15 @@ const Chat = () => {
     }
   };
 
+  useEffect(() => {
+    chatFlowContainer.current.scrollTop =
+      chatFlowContainer.current.scrollHeight;
+  }, [chatMessages]);
+
   return (
     <div className={styles["wrapper-chat"]}>
       <div className={styles["wrapper-header"]}>Browser Shop Chat</div>
-      <div className={styles["wrapper-chatflow"]}>
+      <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
         {chatMessages.map((data) => {
           return data.id === myId ? (
             <div key={data.uid} className={styles["message-own"]}>
