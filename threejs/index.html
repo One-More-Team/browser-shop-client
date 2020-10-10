@@ -209,6 +209,21 @@
 
       initCannon();
       init();
+
+      var textureLoader = new THREE.TextureLoader();
+      var textureEquirec = textureLoader.load(
+        "asset/texture/autumn_park_2k.jpg"
+      );
+      textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+      textureEquirec.encoding = THREE.sRGBEncoding;
+      var geometry = new THREE.IcosahedronBufferGeometry(400, 15);
+      var sphereMaterial = new THREE.MeshLambertMaterial({
+        envMap: textureEquirec,
+      });
+      var sphereMesh = new THREE.Mesh(geometry, sphereMaterial);
+      scene.add(sphereMesh);
+      scene.background = textureEquirec;
+
       debugRenderer = new THREE.CannonDebugRenderer(scene, world);
 
       function initCannon() {
@@ -248,9 +263,10 @@
         sphereShape = new CANNON.Sphere(radius);
         sphereBody = new CANNON.Body({ mass: mass });
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(10, 0, 0);
+        sphereBody.position.set(40, 0.5, 10);
         sphereBody.linearDamping = 0.9;
         world.add(sphereBody);
+        //sphereBody.rotation.y = Math.PI / 2;
 
         var groundShape = new CANNON.Plane();
         var groundBody = new CANNON.Body({ mass: 0 });
