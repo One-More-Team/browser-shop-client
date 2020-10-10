@@ -160,7 +160,7 @@ function* clearUserFromShop(action) {
 
 function* sendPositionsForShop(action) {
   const myId = yield select(GetMyId);
-  if (myId == action.position.id) {
+  if (myId != action.position.id) {
     window.updatePosition(action.position);
   }
 }
