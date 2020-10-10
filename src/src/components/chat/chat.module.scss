@@ -4,21 +4,19 @@
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
-  border-radius: 25px 25px 0 0;
   display: flex;
   flex-direction: column;
 }
 
 .wrapper-header {
-  border-radius: 25px 25px 0 0;
-  width: 100%;
-  height: 20px;
+  width: 40%;
+  height: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  left: 5px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  padding: 20px 0;
+  flex-direction: column;
 }
 
 .wrapper-chatflow {
