@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth } from "../../../firebase";
-
-import authStyles from "../auth.module.scss";
-import formStyle from "../../../common/style/form.module.scss";
 import { useDispatch } from "react-redux";
+
+import GuestLogin from "../guest-login/guest-login";
 import { succesfulAuth } from "../../../store/actions/auth";
 
 import logo from "../../../asset/img/logo_final_transparent.png";
+
+import authStyles from "../auth.module.scss";
+import formStyle from "../../../common/style/form.module.scss";
 
 const SignIn = ({ toggleAuthType }) => {
   const { register, handleSubmit, errors } = useForm();
@@ -75,6 +77,7 @@ const SignIn = ({ toggleAuthType }) => {
           Sign up
         </div>
       </form>
+      <GuestLogin />
     </div>
   );
 };

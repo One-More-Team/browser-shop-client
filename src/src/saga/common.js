@@ -35,7 +35,6 @@ const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
 function* createWebSocket(action) {
-  console.log("test 2");
   websocket = new WebSocket(wsUri);
   websocket.onclose = (evt) => onClose(evt);
   websocket.onerror = (evt) => onError(evt);
@@ -117,7 +116,10 @@ function doSend(message) {
 function* emulateConnected() {
   yield delay(2000);
   yield put(connectedToWS());
+
   const userName = yield select(GetDisplayName);
+  localStorage.setItem("lastDisplayName", userName);
+
   yield call(doSend, `{"header":"init","data":{"name":"${userName}"}}`);
 
   const waitChannel = eventChannel((emitter) => {

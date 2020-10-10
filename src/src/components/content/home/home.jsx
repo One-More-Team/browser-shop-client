@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { connectWS } from "../../../store/actions/common";
 
@@ -31,6 +31,11 @@ const Home = () => {
   const clearDisplayNameError = () => {
     setHasDisplayNameError(false);
   };
+
+  useEffect(() => {
+    displayNameInput.current.value =
+      localStorage.getItem("lastDisplayName") || "";
+  }, []);
 
   return (
     <>

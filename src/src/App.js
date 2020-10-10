@@ -15,6 +15,7 @@ import { GetUser } from "./store/selectors/auth";
 import BrowserShop from "./components/content/browser-shop/browser-shop";
 import { GetBrowserShopState } from "./store/selectors/common";
 import { browserShopState } from "./enums/enums";
+import Account from "./components/content/account/account";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -23,7 +24,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="App">
-        {user || true ? (
+        {user ? (
           <>
             <SideBar />
             <Switch>
@@ -31,7 +32,7 @@ const App = () => {
                 <Home />
               </Route>
               <Route path="/account">
-                <div />
+                <Account />
               </Route>
             </Switch>
             <BrowserShop />

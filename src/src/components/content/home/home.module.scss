@@ -46,7 +46,14 @@
   input {
     width: 200px;
     padding-left: 35px;
+    padding-right: 35px;
     background-color: #ffffff;
+    text-align: center;
+
+    &:active,
+    &:focus {
+      text-align: left;
+    }
   }
 
   .InputContainer {

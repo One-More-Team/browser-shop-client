@@ -188,7 +188,6 @@ const createUser = ({ id, name, position, isOwn, color }) => {
     name,
     body,
     mesh,
-    serverPosition: { x: position.x, y: position.y, z: position.z },
   });
 };
 

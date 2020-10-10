@@ -4,6 +4,7 @@ import { auth } from "../../../firebase";
 
 import authStyles from "../auth.module.scss";
 import formStyle from "../../../common/style/form.module.scss";
+import GuestLogin from "../guest-login/guest-login";
 
 const SignUp = ({ toggleAuthType }) => {
   const { register, handleSubmit, errors } = useForm();
@@ -71,6 +72,7 @@ const SignUp = ({ toggleAuthType }) => {
           Sign in
         </div>
       </form>
+      <GuestLogin />
     </div>
   );
 };
