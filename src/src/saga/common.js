@@ -27,10 +27,6 @@ const LEAVE = "leave";
 const wsUri = "ws://192.168.2.115:8081/";
 let websocket;
 
-function* chatMessageSend(action) {
-  yield call(doSend, `{"header":"sendChatMessage","data":"${action.message}"}`);
-}
-
 function* createWebSocket(action) {
   console.log("test 2");
   websocket = new WebSocket(wsUri);
@@ -128,10 +124,28 @@ function* emulateConnected() {
   }
 }
 
+function* chatMessageSend(action) {
+  yield call(doSend, `{"header":"sendChatMessage","data":"${action.message}"}`);
+}
+
+function* sendUsersToShop(action) {
+  window.addUsers(action.users);
+}
+
 function* Common() {
   yield takeLatest(CONNECT_TO_WS, createWebSocket);
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
   yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateConnected);
+  yield takeLatest(SAVE_USERS, sendUsersToShop);
 }
 
 export default Common;
+
+/*
+window.addUsers({ id: 123, name: "NewKrok", position: {x,y,z} })
+
+window.removeUser(123)
+
+windows.syncPositions([{ id: 123, position: {x,y,z}, { id: 456, position: {x,y,z}])
+
+*/
