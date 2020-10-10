@@ -368,6 +368,7 @@ const getUserColor = () => {
 
 window.addUsers = (users) => {
   users.forEach(({ id, name, position }) => {
+    console.log(`Add user with id ${id} and with name ${name}`);
     createUser({
       id: id,
       name: name,
@@ -379,8 +380,10 @@ window.addUsers = (users) => {
 };
 
 window.removeUser = (targetId) => {
+  console.log(`Remove user with id ${targetID}`);
   var user = users.find(({ id }) => id === targetId);
-  scene.remove(user.mesh);
+  if (user) scene.remove(user.mesh);
+  else console.log(`Remove error, user not found`);
 
   users = users.filter(({ id }) => id !== targetId);
 };
