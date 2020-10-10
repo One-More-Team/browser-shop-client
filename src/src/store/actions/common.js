@@ -22,4 +22,7 @@ export const saveId = (id) => ({
   id,
 });
 
-export const connectWS = () => ({ type: CONNECT_TO_WS });
+export const connectWS = (requestedDisplayName) => ({
+  type: CONNECT_TO_WS,
+  displayName: requestedDisplayName,
+});

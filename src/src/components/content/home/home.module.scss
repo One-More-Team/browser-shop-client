@@ -7,6 +7,7 @@
   padding-left: 4.5rem;
   color: #000;
   overflow: auto;
+  position: relative;
 }
 
 .Section {
@@ -29,6 +30,107 @@
   margin-top: 1rem;
   position: relative;
   font-size: 2rem;
+}
+
+.InputBlock {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  input {
+    width: 200px;
+    padding-left: 35px;
+    background-color: #ffffff;
+  }
+
+  .InputContainer {
+    width: 200px;
+    position: relative;
+  }
+}
+
+.InputIcon {
+  position: absolute;
+  color: #aaa;
+  left: 10px;
+  top: 1em;
+}
+
+.ActiveName {
+  font-size: 2em;
+  font-weight: bold;
+  animation: ShowName 1s;
+  animation-fill-mode: forwards;
+}
+
+.EnterButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  margin: auto;
+  width: fit-content;
+  opacity: 1;
+
+  &:hover .Logo {
+    transform: scale(1.1);
+  }
+
+  .Logo {
+    max-width: 250px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+}
+
+.ConnectingButton {
+  transform: scale(2);
+  opacity: 0;
+  transition: transform 0.6s, opacity 0.6s;
+  pointer-events: none;
+  cursor: initial;
+}
+
+.Loader {
+  border: 16px solid #98cb37;
+  border-radius: 50%;
+  border-top: 16px solid #ffffff;
+  width: 120px;
+  height: 120px;
+  left: calc(50% - 30px);
+  top: 30%;
+  position: absolute;
+  -webkit-animation: Spin 2s linear infinite; /* Safari */
+  animation: Spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes Spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes Spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ShowName {
+  0% {
+    opacity: 0;
+    margin-top: 0px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 30px;
+  }
 }
 
 @media (min-width: 1168px) {

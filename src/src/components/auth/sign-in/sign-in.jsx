@@ -6,6 +6,7 @@ import authStyles from "../auth.module.scss";
 import formStyle from "../../../common/style/form.module.scss";
 import { useDispatch } from "react-redux";
 import { succesfulAuth } from "../../../store/actions/auth";
+
 import logo from "../../../asset/img/logo_final_transparent.png";
 
 const SignIn = ({ toggleAuthType }) => {

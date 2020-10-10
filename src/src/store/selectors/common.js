@@ -4,4 +4,15 @@ const GetMyId = (state) => state.commonReducer.id;
 
 const GetChatMessages = (state) => state.commonReducer.messages;
 
-export { GetTestData, GetMyId, GetChatMessages };
+const GetIsConnectingInProgress = (state) =>
+  state.commonReducer.isConnectingInProgress;
+
+const GetDisplayName = (state) => state.commonReducer.displayName;
+
+export {
+  GetTestData,
+  GetMyId,
+  GetChatMessages,
+  GetIsConnectingInProgress,
+  GetDisplayName,
+};

@@ -1,11 +1,13 @@
 import {
   CHAT_MESSAGE_RECEIVE,
+  CONNECT_TO_WS,
   SAVE_ID,
-  SEND_CHAT_MESSAGE,
 } from "../actions/common";
 
 const initialState = {
   testData: "Initial test data",
+  isConnectingInProgress: false,
+  displayName: "",
   id: "",
   messages: [],
 };
@@ -18,6 +20,12 @@ const commonReducer = (state = initialState, action) => {
       return {
         ...state,
         id: action.id,
+      };
+    case CONNECT_TO_WS:
+      return {
+        ...state,
+        isConnectingInProgress: true,
+        displayName: action.displayName,
       };
     case CHAT_MESSAGE_RECEIVE:
       return {
