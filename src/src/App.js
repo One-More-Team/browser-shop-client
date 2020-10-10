@@ -12,6 +12,7 @@ import Chat from "./components/chat/chat";
 import "./App.css";
 import { useSelector } from "react-redux";
 import { GetUser } from "./store/selectors/auth";
+import BrowserShop from "./components/content/browser-shop/browser-shop";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -31,6 +32,7 @@ const App = () => {
               </Route>
             </Switch>
             <Chat />
+            <BrowserShop />
           </>
         ) : (
           <Auth />

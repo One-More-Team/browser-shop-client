@@ -1,0 +1,73 @@
+.Canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.Blocker {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Instructions {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 50px 20px;
+  border-radius: 5px;
+}
+
+.PlayLabel {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.Controls {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9em;
+}
+
+.Control {
+  display: flex;
+  margin: 10px;
+}
+
+.ControlLabel {
+  margin-right: 10px;
+}
+
+.Button {
+  background: #fff;
+  font-weight: bold;
+  color: #000;
+  padding: 4px 10px;
+  line-height: 1;
+  border-radius: 5px;
+  margin: 0 5px;
+  filter: drop-shadow(1px 1px 1px #000);
+  display: flex;
+  align-items: center;
+}
+
+.LongButton {
+  @extend .Button;
+  padding: 8px 40px;
+}
+
+.Mouse {
+  padding: 8px;
+  filter: drop-shadow(1px 1px 1px #000);
+}
