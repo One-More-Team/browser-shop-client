@@ -5,4 +5,9 @@ const connectionState = {
   CONNECTION_HAD_ERROR: "CONNECTION_ERROR",
 };
 
-export { connectionState };
+const browserShopState = {
+  INITIAL: "INITIAL",
+  READY: "READY",
+};
+
+export { connectionState, browserShopState };

@@ -1,14 +1,16 @@
-import { connectionState } from "../../enums/enums";
+import { connectionState, browserShopState } from "../../enums/enums";
 import {
   CHAT_MESSAGE_RECEIVE,
   CONNECTED_TO_WS,
   CONNECT_TO_WS,
+  ON_BROWSER_SHOP_READY,
   SAVE_ID,
 } from "../actions/common";
 
 const initialState = {
   testData: "Initial test data",
   connectionStatus: connectionState.CONNECTION_INITIAL,
+  browserShopState: browserShopState.INITIAL,
   displayName: "",
   id: "",
   messages: [],
@@ -33,6 +35,11 @@ const commonReducer = (state = initialState, action) => {
       return {
         ...state,
         connectionStatus: connectionState.CONNECTION_CONNECTED,
+      };
+    case ON_BROWSER_SHOP_READY:
+      return {
+        ...state,
+        browserShopState: browserShopState.READY,
       };
     case CHAT_MESSAGE_RECEIVE:
       return {
