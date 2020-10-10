@@ -16,6 +16,7 @@ import {
   saveUsers,
   saveUser,
   clearUser,
+  syncPosition,
 } from "../store/actions/common";
 import { GetDisplayName } from "../store/selectors/common";
 
@@ -114,15 +115,17 @@ function* emulateConnected() {
       emitter(onBrowserShopReady());
     };
     window.startBrowserShop({
-      serverCall: websocket.send,
+      serverCall: doSend,
       userName,
       onReady,
     });
     return () => {};
   });
 
-  let action = yield take(waitChannel);
-  yield put(action);
+  while (true) {
+    let action = yield take(waitChannel);
+    yield put(action);
+  }
 }
 
 function* Common() {

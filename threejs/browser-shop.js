@@ -14,6 +14,8 @@ let controls;
 let time = Date.now();
 let textureAssets = {};
 
+let _serverCall = (args) => {};
+
 const users = [];
 
 const initCannonJS = () => {
@@ -324,11 +326,17 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
+  if (users.length > 0)
+    _serverCall(
+      `{"header":"updatePosition","data":{"position":{"x":"${users[0].body.position.x}", "y":"${users[0].body.position.y}", "z":"${users[0].body.position.z}"}}}`
+    );
+
   if (USE_DEBUG_RENDERER) debugRenderer.update();
   time = Date.now();
 };
 
 window.startBrowserShop = ({ serverCall, onReady, userName }) => {
+  _serverCall = serverCall;
   loadTextures(assetConfig.textures, () => {
     initCannonJS();
     initThreeJS();

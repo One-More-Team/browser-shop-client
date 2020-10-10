@@ -34,8 +34,8 @@ const App = () => {
                 <div />
               </Route>
             </Switch>
-            {_browserShopState === browserShopState.READY && <Chat />}
             <BrowserShop />
+            {_browserShopState === browserShopState.READY && <Chat />}
           </>
         ) : (
           <Auth />

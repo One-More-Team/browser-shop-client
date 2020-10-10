@@ -10,6 +10,7 @@ export const SAVE_ID = "SAVE_ID";
 export const GET_ID = "GET_ID";
 
 export const ON_BROWSER_SHOP_READY = "ON_BROWSER_SHOP_READY";
+export const SYNC_POSITION = "SYNC_POSITION";
 
 export const SAVE_USERS = "SAVE_USERS";
 export const SAVE_USER = "SAVE_USER";
@@ -67,4 +68,9 @@ export const connectedToWSEmulate = () => ({
 
 export const onBrowserShopReady = () => ({
   type: ON_BROWSER_SHOP_READY,
+});
+
+export const syncPosition = (position) => ({
+  type: SYNC_POSITION,
+  position: position,
 });
