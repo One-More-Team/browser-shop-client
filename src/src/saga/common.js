@@ -1,5 +1,5 @@
 import { eventChannel } from "redux-saga";
-import { call, delay, put, take, takeLatest } from "redux-saga/effects";
+import { call, delay, put, take, select, takeLatest } from "redux-saga/effects";
 
 import { rsf } from "../firebase";
 import { SUCCESFUL_AUTH } from "../store/actions/auth";
@@ -12,6 +12,7 @@ import {
   connectedToWS,
   connectedToWSEmulate,
 } from "../store/actions/common";
+import { GetDisplayName } from "../store/selectors/common";
 
 const INIT = "init";
 const SEND_CHAT_MESSAGE = "sendChatMessage";
@@ -40,7 +41,6 @@ function* subscribe(socket) {
     socket.onopen = (evt) => {
       writeToScreen("CONNECTED");
       emit(connectedToWSEmulate());
-      doSend('{"header":"init","data":{"name":"Tibikeee"}}');
     };
 
     socket.onmessage = (evt) => {
@@ -97,6 +97,10 @@ function doSend(message) {
 function* emulateCOnnected() {
   yield delay(2000);
   yield put(connectedToWS());
+
+  const userName = yield select(GetDisplayName);
+
+  yield call(doSend, `{"header":"init","data":{"name":"${userName}"}}`);
 }
 
 function* Common() {
