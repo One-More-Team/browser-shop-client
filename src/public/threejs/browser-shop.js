@@ -380,7 +380,7 @@ window.addUsers = (users) => {
 };
 
 window.removeUser = (targetId) => {
-  console.log(`Remove user with id ${targetID}`);
+  console.log(`Remove user with id ${targetId}`);
   var user = users.find(({ id }) => id === targetId);
   if (user) scene.remove(user.mesh);
   else console.log(`Remove error, user not found`);
