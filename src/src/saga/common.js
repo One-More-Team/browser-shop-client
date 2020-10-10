@@ -20,7 +20,7 @@ import {
   SAVE_USERS,
   CLEAR_USER,
 } from "../store/actions/common";
-import { GetDisplayName } from "../store/selectors/common";
+import { GetDisplayName, GetMyId } from "../store/selectors/common";
 
 const INIT = "init";
 const SEND_CHAT_MESSAGE = "sendChatMessage";
@@ -136,7 +136,9 @@ function* chatMessageSend(action) {
 
 function* sendUsersToShop(action) {
   yield delay(5000);
-  window.addUsers(action.users);
+  const myId = yield select(GetMyId);
+
+  window.addUsers(action.users.filter((v) => v.id != myId));
 }
 
 function* clearUserFromShop(action) {
