@@ -384,3 +384,10 @@ window.removeUser = (targetId) => {
 
   users = users.filter(({ id }) => id !== targetId);
 };
+
+windows.syncPositions = (userDatas) => {
+  userDatas.forEach(({ id, position }) => {
+    const user = users.find((user) => user.id === id);
+    if (user) user.mesh.position.copy(position);
+  });
+};
