@@ -318,11 +318,6 @@ const animate = () => {
   requestAnimationFrame(animate);
 
   world.step(1 / 60);
-  users.forEach((user, index) => {
-    if (index > 0 && user.mesh) {
-      user.mesh.position.copy(user.serverPosition);
-    }
-  });
 
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
