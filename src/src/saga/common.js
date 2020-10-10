@@ -18,7 +18,7 @@ import {
   clearUser,
   syncPosition,
   SAVE_USERS,
-  CLEAR_USER,
+  CLEAR_USER,, SAVE_USER
 } from "../store/actions/common";
 import { GetDisplayName, GetMyId } from "../store/selectors/common";
 
@@ -141,6 +141,10 @@ function* sendUsersToShop(action) {
   window.addUsers(action.users.filter((v) => v.id != myId));
 }
 
+function* sendUserToShop(action) {
+  window.addUsers(action.user);
+}
+
 function* clearUserFromShop(action) {
   window.removeUser(action.userID);
 }
@@ -150,6 +154,7 @@ function* Common() {
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
   yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateConnected);
   yield takeLatest(SAVE_USERS, sendUsersToShop);
+  yield takeLatest(SAVE_USER, sendUserToShop);
   yield takeLatest(CLEAR_USER, clearUserFromShop);
 }
 
