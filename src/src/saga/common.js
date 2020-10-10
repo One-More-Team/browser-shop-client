@@ -16,7 +16,8 @@ import {
   saveUsers,
   saveUser,
   clearUser,
-  syncPosition,, SAVE_USERS
+  syncPosition,
+  SAVE_USERS,
 } from "../store/actions/common";
 import { GetDisplayName } from "../store/selectors/common";
 
@@ -129,6 +130,7 @@ function* chatMessageSend(action) {
 }
 
 function* sendUsersToShop(action) {
+  yield delay(5000);
   window.addUsers(action.users);
 }
 
