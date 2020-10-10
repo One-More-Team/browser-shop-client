@@ -13,9 +13,12 @@ import "./App.css";
 import { useSelector } from "react-redux";
 import { GetUser } from "./store/selectors/auth";
 import BrowserShop from "./components/content/browser-shop/browser-shop";
+import { GetBrowserShopState } from "./store/selectors/common";
+import { browserShopState } from "./enums/enums";
 
 const App = () => {
   const user = useSelector(GetUser);
+  const _browserShopState = useSelector(GetBrowserShopState);
 
   return (
     <BrowserRouter>
@@ -31,7 +34,7 @@ const App = () => {
                 <div />
               </Route>
             </Switch>
-            <Chat />
+            {_browserShopState === browserShopState.READY && <Chat />}
             <BrowserShop />
           </>
         ) : (

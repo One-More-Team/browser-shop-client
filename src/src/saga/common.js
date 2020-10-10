@@ -109,20 +109,20 @@ function* emulateConnected() {
   yield call(doSend, `{"header":"init","data":{"name":"${userName}"}}`);
 
   const waitChannel = eventChannel((emitter) => {
+    const onReady = () => {
+      console.log("Browser Shop is ready!");
+      emitter(onBrowserShopReady());
+    };
     window.startBrowserShop({
       serverCall: websocket.send,
       userName,
-      onReady: () => {
-        console.log("Browser Shop is ready!");
-        emitter(onBrowserShopReady());
-      },
+      onReady,
     });
     return () => {};
   });
-  while (true) {
-    let action = yield take(waitChannel);
-    yield put(action);
-  }
+
+  let action = yield take(waitChannel);
+  yield put(action);
 }
 
 function* Common() {

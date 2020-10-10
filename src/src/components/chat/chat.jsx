@@ -5,10 +5,8 @@ import styles from "./chat.module.scss";
 import {
   GetMyId,
   GetChatMessages,
-  GetBrowserShopState,
   GetChatUsers,
 } from "../../store/selectors/common";
-import { browserShopState } from "../../enums/enums";
 
 const Chat = () => {
   const inputField = useRef(null);
@@ -18,7 +16,6 @@ const Chat = () => {
   const myId = useSelector(GetMyId);
 
   const chatMessages = useSelector(GetChatMessages);
-  const _browserShopState = useSelector(GetBrowserShopState);
   const chatUsers = useSelector(GetChatUsers);
 
   const sendMessageButton = () => {
@@ -41,44 +38,42 @@ const Chat = () => {
 
   return (
     <>
-      {_browserShopState === browserShopState.READY && (
-        <div className={styles["wrapper-chat"]}>
-          <div className={styles["wrapper-header"]}>
-            Browser Shop Chat ({chatUsers.length})
-          </div>
-          <div className={styles["wrapper-users"]}>
-            {chatUsers.map((data) => (
-              <div key={data.id} className={styles["wrapper-users-instance"]}>
-                <div className={styles["user-avatar"]} />
-                {data.name}
-              </div>
-            ))}
-          </div>
-          <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
-            {chatMessages.map((data) => {
-              return data.id === myId ? (
-                <div key={data.uid} className={styles["message-own"]}>
-                  {data.message}
-                </div>
-              ) : (
-                <div key={data.uid} className={styles["message-income"]}>
-                  {data.message}
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles["wrapper-input"]}>
-            <input
-              ref={inputField}
-              type="text"
-              className={styles["msg-input"]}
-              placeholder="Enter your message..."
-              onKeyDown={sendMessage}
-            />
-            <button onClick={sendMessageButton}>Send</button>
-          </div>
+      <div className={styles["wrapper-chat"]}>
+        <div className={styles["wrapper-header"]}>
+          Browser Shop Chat ({chatUsers.length})
         </div>
-      )}
+        <div className={styles["wrapper-users"]}>
+          {chatUsers.map((data) => (
+            <div key={data.id} className={styles["wrapper-users-instance"]}>
+              <div className={styles["user-avatar"]} />
+              {data.name}
+            </div>
+          ))}
+        </div>
+        <div className={styles["wrapper-chatflow"]} ref={chatFlowContainer}>
+          {chatMessages.map((data) => {
+            return data.id === myId ? (
+              <div key={data.uid} className={styles["message-own"]}>
+                {data.message}
+              </div>
+            ) : (
+              <div key={data.uid} className={styles["message-income"]}>
+                {data.message}
+              </div>
+            );
+          })}
+        </div>
+        <div className={styles["wrapper-input"]}>
+          <input
+            ref={inputField}
+            type="text"
+            className={styles["msg-input"]}
+            placeholder="Enter your message..."
+            onKeyDown={sendMessage}
+          />
+          <button onClick={sendMessageButton}>Send</button>
+        </div>
+      </div>
     </>
   );
 };

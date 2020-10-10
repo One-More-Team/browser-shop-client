@@ -8,6 +8,12 @@
   color: #000;
   overflow: auto;
   position: relative;
+  opacity: 1;
+}
+
+.HideContainer {
+  transition: opacity 0.2s;
+  opacity: 0;
 }
 
 .Section {

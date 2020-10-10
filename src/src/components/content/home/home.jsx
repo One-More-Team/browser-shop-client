@@ -34,7 +34,11 @@ const Home = () => {
 
   return (
     <>
-      <div className={styles.Container}>
+      <div
+        className={`${styles.Container} ${
+          _browserShopState === browserShopState.READY && styles.HideContainer
+        }`}
+      >
         <div className={styles.Section}>
           <div className={styles.InputBlock}>
             {connectionStatus === connectionState.CONNECTION_CONNECTING && (

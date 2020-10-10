@@ -39,7 +39,7 @@ const commonReducer = (state = initialState, action) => {
     case CLEAR_USER:
       return {
         ...state,
-        clientList: state.clientList.filter((a) => a.id != action.userID),
+        clientList: state.clientList.filter((a) => a.id !== action.userID),
       };
     case SAVE_ID:
       return {
