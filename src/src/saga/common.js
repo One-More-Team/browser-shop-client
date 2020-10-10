@@ -94,7 +94,8 @@ function doSend(message) {
   });
 } */
 
-function* emulateCOnnected() {
+function* emulateConnected() {
+  window.startBrowserShop();
   yield delay(2000);
   yield put(connectedToWS());
 
@@ -106,7 +107,7 @@ function* emulateCOnnected() {
 function* Common() {
   yield takeLatest(CONNECT_TO_WS, createWebSocket);
   yield takeLatest(CHAT_MESSAGE_SEND, chatMessageSend);
-  yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateCOnnected);
+  yield takeLatest(CONNECTED_TO_WS_EMULATE, emulateConnected);
 }
 
 export default Common;
