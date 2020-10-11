@@ -56,7 +56,6 @@ function* subscribe(socket) {
     socket.onmessage = (evt) => {
       let rawData = JSON.parse(evt.data);
       let command = rawData.header;
-      writeToScreen(`----->   ${command}`);
 
       switch (command) {
         case INIT: {

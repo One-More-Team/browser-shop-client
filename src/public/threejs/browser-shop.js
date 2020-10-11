@@ -174,6 +174,7 @@ const createVideoWall = () => {
   video.load();
   video.play();
   video.volume = 0.05;
+  video.loop = true;
 
   videoImage = document.createElement("canvas");
   videoImage.width = 1270;
