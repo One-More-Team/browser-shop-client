@@ -18,4 +18,4 @@ Available here https://browser-shop.com/
 
 # Used assets
 - Texture Haven for textures https://texturehaven.com/
-- HDRI HAven for skybox https://hdrihaven.com/
+- HDRI Haven for skybox https://hdrihaven.com/
