@@ -106,7 +106,7 @@ function onError(evt) {
 
 function doSend(message) {
   var json = JSON.parse(message);
-  if (!["updatePosition"].find((func) => func == json.header)) {
+  if (!["updatePosition"].find((func) => func === json.header)) {
     writeToScreen(`<-----   ${message}`);
   }
 
@@ -149,7 +149,7 @@ function* sendUsersToShop(action) {
   yield delay(5000);
   const myId = yield select(GetMyId);
 
-  window.addUsers(action.users.filter((v) => v.id != myId));
+  window.addUsers(action.users.filter((v) => v.id !== myId));
 }
 
 function* sendUserToShop(action) {
@@ -162,7 +162,7 @@ function* clearUserFromShop(action) {
 
 function* sendPositionsForShop(action) {
   const myId = yield select(GetMyId);
-  if (myId != action.position.id) {
+  if (myId !== action.position.id) {
     window.updatePosition(action.position);
   }
 }

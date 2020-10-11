@@ -16,6 +16,7 @@ import BrowserShop from "./components/content/browser-shop/browser-shop";
 import { GetBrowserShopState } from "./store/selectors/common";
 import { browserShopState } from "./enums/enums";
 import Account from "./components/content/account/account";
+import UserList from "./components/user-list/user-list";
 
 const App = () => {
   const user = useSelector(GetUser);
@@ -36,7 +37,12 @@ const App = () => {
               </Route>
             </Switch>
             <BrowserShop />
-            {_browserShopState === browserShopState.READY && <Chat />}
+            {_browserShopState === browserShopState.READY && (
+              <>
+                <UserList />
+                <Chat />
+              </>
+            )}
           </>
         ) : (
           <Auth />

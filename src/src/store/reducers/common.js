@@ -72,7 +72,12 @@ const commonReducer = (state = initialState, action) => {
         ...state,
         messages: [
           ...state.messages,
-          { uid: uniqueChatId++, ...action.message },
+          {
+            uid: uniqueChatId++,
+            ...action.message,
+            name: state.clientList.find((user) => user.id == action.message.id)
+              .name,
+          },
         ],
       };
     default:
