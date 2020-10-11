@@ -17,6 +17,11 @@ let lastSyncTime = 0;
 let lastSyncedPosition = { x: 0, y: 0, z: 0 };
 let users = [];
 
+let video;
+let videoImage;
+let videoImageContext;
+let videoTexture;
+
 let _serverCall = (args) => {};
 
 const initCannonJS = () => {
@@ -161,6 +166,39 @@ const createSkyBox = () => {
   const skyBoxMesh = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
   scene.add(skyBoxMesh);
   scene.background = textureEquirec;
+};
+
+const createVideoWall = () => {
+  video = document.createElement("video");
+  video.src =
+    "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
+  video.load();
+  video.play();
+  video.volume = 0.1;
+
+  videoImage = document.createElement("canvas");
+  videoImage.width = 480;
+  videoImage.height = 204;
+
+  videoImageContext = videoImage.getContext("2d");
+  // background color if no video present
+  videoImageContext.fillStyle = "#000000";
+  videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
+
+  videoTexture = new THREE.Texture(videoImage);
+  videoTexture.minFilter = THREE.LinearFilter;
+  videoTexture.magFilter = THREE.LinearFilter;
+
+  let movieMaterial = new THREE.MeshBasicMaterial({
+    map: videoTexture,
+    overdraw: true,
+    side: THREE.DoubleSide,
+  });
+
+  let movieGeometry = new THREE.PlaneGeometry(8, 4, 50, 50);
+  let movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
+  movieScreen.position.set(45, 5, -6);
+  scene.add(movieScreen);
 };
 
 const createUser = ({ id, name, position, isOwn, color }) => {
@@ -319,6 +357,11 @@ const animate = () => {
 
   world.step(1 / 60);
 
+  //if (video.readyState === video.HAVE_ENOUGH_DATA) {
+  videoImageContext.drawImage(video, 0, 0);
+  if (videoTexture) videoTexture.needsUpdate = true;
+  // }
+
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
@@ -359,6 +402,7 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
       });
       controls = new PointerLockControls(camera, users[0].body);
       scene.add(controls.getObject());
+      createVideoWall();
       init();
       animate();
       onReady();
