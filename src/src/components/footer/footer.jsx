@@ -5,14 +5,14 @@ import { GetBrowserShopState } from "../../store/selectors/common";
 
 import styles from "./footer.module.scss";
 
-const Footer = () => {
+const Footer = ({ isStandalone = false }) => {
   const _browserShopState = useSelector(GetBrowserShopState);
 
   return (
     <div
       className={`${styles.Footer} ${
         _browserShopState === browserShopState.READY && styles.slideOut
-      }`}
+      } ${isStandalone && styles.Standalone}`}
     >
       https://browser-shop.com/
     </div>

@@ -76,6 +76,11 @@ const Chat = () => {
             <div className={styles.Info}>Press enter to send a message</div>
           </div>
         )}
+        {!isOpened && (
+          <div className={styles.StandaloneInfo}>
+            Press enter to send a message
+          </div>
+        )}
       </div>
     </>
   );
