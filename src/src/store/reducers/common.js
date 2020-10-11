@@ -75,7 +75,7 @@ const commonReducer = (state = initialState, action) => {
           {
             uid: uniqueChatId++,
             ...action.message,
-            name: state.clientList.find((user) => user.id == action.message.id)
+            name: state.clientList.find((user) => user.id === action.message.id)
               .name,
           },
         ],

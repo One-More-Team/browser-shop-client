@@ -31,7 +31,7 @@ const JOIN = "join";
 const LEAVE = "leave";
 const UPDATEPOSITION = "updatePosition";
 
-const wsUri = "ws://192.168.2.115:8081/";
+const wsUri = "wss://browser-shop.herokuapp.com";
 let websocket;
 
 function* createWebSocket(action) {
@@ -60,8 +60,9 @@ function* subscribe(socket) {
       switch (command) {
         case INIT: {
           emit(saveId(rawData.data.id));
-          emit(saveProducts(rawData.data.products));
+          emit(saveProducts(rawData.data.shops));
           emit(saveUsers(rawData.data.clientList));
+          window.setShops(rawData.data.shops);
           break;
         }
         case SEND_CHAT_MESSAGE: {

@@ -33,5 +33,11 @@ export default {
       scaleX: 1,
       scaleY: 1,
     },
+    {
+      url: "./asset/3d/texture/f_tex_1.jpg",
+      id: "Tiles",
+      scaleX: 40,
+      scaleY: 10,
+    },
   ],
 };

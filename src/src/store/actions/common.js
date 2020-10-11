@@ -55,9 +55,9 @@ export const saveId = (id) => ({
   id,
 });
 
-export const saveProducts = (products) => ({
+export const saveProducts = (shops) => ({
   type: SAVE_PRODUCTS,
-  products,
+  shops,
 });
 
 export const connectWS = (requestedDisplayName) => ({

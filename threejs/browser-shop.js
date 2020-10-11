@@ -15,6 +15,7 @@ let time = Date.now();
 let textureAssets = {};
 let lastSyncTime = 0;
 let lastSyncedPosition = { x: 0, y: 0, z: 0 };
+let _shops = [];
 let users = [];
 
 let video;
@@ -73,6 +74,7 @@ const initThreeJS = () => {
   scene.add(alight);
 
   renderer = new THREE.WebGLRenderer({
+    antialias: true,
     canvas: document.getElementById("browser-shop-canvas"),
   });
   renderer.shadowMap.enabled = true;
@@ -121,11 +123,39 @@ const loadLevel = (onLoaded) => {
         } else if (child.name.includes("Bricks")) {
           child.material = textureAssets.Bricks;
         } else if (child.name.includes("Floor")) {
-          child.material = textureAssets.Floor;
+          const texture = new THREE.TextureLoader().load(
+            "./asset/3d/texture/marble_01_diff_1k.jpg"
+          );
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(50, 50);
+          child.material = new THREE.MeshBasicMaterial({ map: texture });
         } else if (child.name.includes("Square")) {
           child.material = textureAssets.Square;
+          const texture = new THREE.TextureLoader().load(
+            "./asset/3d/texture/large_square_pattern_01_diff_1k.jpg"
+          );
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(20, 20);
+          child.material = new THREE.MeshBasicMaterial({ map: texture });
+        } else if (child.name.includes("Stairs")) {
+          const texture = new THREE.TextureLoader().load(
+            "./asset/3d/texture/floor_tiles_09_diff_1k.jpg"
+          );
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(20, 20);
+          child.material = new THREE.MeshBasicMaterial({ map: texture });
+        } else if (child.name.includes("Concrete")) {
+          const texture = new THREE.TextureLoader().load(
+            "./asset/3d/texture/concrete_floor_02_diff_1k.jpg"
+          );
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(1, 2);
+          child.material = new THREE.MeshBasicMaterial({ map: texture });
         }
-
         if (child.name.includes("Collider")) {
           const halfExtents = new CANNON.Vec3(
             child.scale.x / 100,
@@ -166,6 +196,38 @@ const createSkyBox = () => {
   const skyBoxMesh = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
   scene.add(skyBoxMesh);
   scene.background = textureEquirec;
+};
+
+const createProduct = ({ position, product }) => {
+  if (
+    position === null ||
+    product === null ||
+    product === undefined ||
+    product.preview === null
+  ) {
+    console.log("invalid data");
+    return;
+  }
+
+  const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+  const texture = new THREE.TextureLoader().load(product.preview);
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  mesh.position.copy({
+    x: position.x,
+    y: position.y,
+    z: position.z,
+  });
+  scene.add(mesh);
+};
+
+const createShops = () => {
+  _shops.forEach(({ shelters }) => {
+    shelters.forEach((shelter) => {
+      if (shelter) createProduct(shelter);
+    });
+  });
 };
 
 const createVideoWall = () => {
@@ -367,7 +429,7 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0 && lastSyncTime++ > 1) {
+  if (users.length > 0 /* && lastSyncTime++ > 1 */) {
     const currentPosition = {
       x: users[0].body.position.x,
       y: users[0].body.position.y,
@@ -395,6 +457,7 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
     initCannonJS();
     initThreeJS();
     createSkyBox();
+    createShops();
     loadLevel(() => {
       createUser({
         id: id,
@@ -443,3 +506,5 @@ window.updatePosition = ({ id, position }) => {
   const user = users.find((user) => user.id === id);
   if (user) user.mesh.position.copy(position);
 };
+
+window.setShops = (shops) => (_shops = shops);

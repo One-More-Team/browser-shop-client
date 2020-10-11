@@ -33,5 +33,17 @@ export default {
       scaleX: 1,
       scaleY: 1,
     },
+    {
+      url: "./asset/3d/texture/floor_tiles_09_diff_1k.jpg",
+      id: "Tiles",
+      scaleX: 40,
+      scaleY: 10,
+    },
+    {
+      url: "./asset/3d/texture/concrete_floor_02_diff_1k.jpg",
+      id: "Concrete",
+      scaleX: 40,
+      scaleY: 10,
+    },
   ],
 };
