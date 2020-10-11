@@ -197,7 +197,8 @@ const createVideoWall = () => {
 
   let movieGeometry = new THREE.PlaneGeometry(8, 4, 50, 50);
   let movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-  movieScreen.position.set(45, 5, -6);
+  movieScreen.position.set(-18, 2.5, 4.5);
+  movieScreen.rotation.y = Math.PI / 2;
   scene.add(movieScreen);
 };
 
@@ -357,10 +358,10 @@ const animate = () => {
 
   world.step(1 / 60);
 
-  //if (video.readyState === video.HAVE_ENOUGH_DATA) {
-  videoImageContext.drawImage(video, 0, 0);
-  if (videoTexture) videoTexture.needsUpdate = true;
-  // }
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    videoImageContext.drawImage(video, 0, 0);
+    if (videoTexture) videoTexture.needsUpdate = true;
+  }
 
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
