@@ -170,19 +170,19 @@ const createSkyBox = () => {
 
 const createVideoWall = () => {
   video = document.createElement("video");
-  video.src =
-    "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
+  video.src = "./asset/lg_commercial.mp4";
   video.load();
   video.play();
-  video.volume = 0.1;
+  video.volume = 0.05;
 
   videoImage = document.createElement("canvas");
-  videoImage.width = 480;
-  videoImage.height = 204;
+  videoImage.width = 1270;
+  videoImage.height = 720;
 
   videoImageContext = videoImage.getContext("2d");
+  videoImageContext.crossOrigin = "anonymous";
   // background color if no video present
-  videoImageContext.fillStyle = "#000000";
+  videoImageContext.fillStyle = "#fff000";
   videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
 
   videoTexture = new THREE.Texture(videoImage);
@@ -192,12 +192,12 @@ const createVideoWall = () => {
   let movieMaterial = new THREE.MeshBasicMaterial({
     map: videoTexture,
     overdraw: true,
-    side: THREE.DoubleSide,
+    side: THREE.FrontSide,
   });
 
-  let movieGeometry = new THREE.PlaneGeometry(8, 4, 50, 50);
+  let movieGeometry = new THREE.PlaneGeometry(8, 3.5, 50, 50);
   let movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-  movieScreen.position.set(-18, 2.5, 4.5);
+  movieScreen.position.set(-18.9, 2.5, 5);
   movieScreen.rotation.y = Math.PI / 2;
   scene.add(movieScreen);
 };
