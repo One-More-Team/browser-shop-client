@@ -19,7 +19,7 @@ const BrowserShop = () => {
       >
         <div id="instructions" className={style.Instructions}>
           <div className={style.PlayLabel}>
-            <i className="fas fa-gamepad"></i> Click to start
+            <i className="fas fa-gamepad"></i> Click here to start
           </div>
           <div className={style.Controls}>
             <div className={style.Control}>

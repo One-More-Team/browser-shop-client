@@ -47,7 +47,7 @@ const App = () => {
         ) : (
           <Auth />
         )}
-        <Footer />
+        <Footer isStandalone={user === null} />
       </div>
     </BrowserRouter>
   );
