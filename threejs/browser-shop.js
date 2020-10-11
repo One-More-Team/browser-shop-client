@@ -17,6 +17,8 @@ let lastSyncTime = 0;
 let lastSyncedPosition = { x: 0, y: 0, z: 0 };
 let _shops = [];
 let users = [];
+let isShopInited = false;
+let isAppInited = false;
 
 let video;
 let videoImage;
@@ -223,11 +225,15 @@ const createProduct = ({ position, product }) => {
 };
 
 const createShops = () => {
-  _shops.forEach(({ shelters }) => {
-    shelters.forEach((shelter) => {
-      if (shelter) createProduct(shelter);
+  if (!isShopInited && _shops.length > 0) {
+    console.log(`Creating virtual shops`);
+    isShopInited = true;
+    _shops.forEach(({ shelters }) => {
+      shelters.forEach((shelter) => {
+        if (shelter) createProduct(shelter);
+      });
     });
-  });
+  }
 };
 
 const createVideoWall = () => {
@@ -436,13 +442,16 @@ const animate = () => {
       z: users[0].body.position.z,
     };
     if (
-      lastSyncedPosition.x != currentPosition.x ||
-      lastSyncedPosition.y != currentPosition.y ||
-      lastSyncedPosition.z != currentPosition.z
+      lastSyncedPosition.x.toFixed(1) != currentPosition.x.toFixed(1) ||
+      lastSyncedPosition.y.toFixed(1) != currentPosition.y.toFixed(1) ||
+      lastSyncedPosition.z.toFixed(1) != currentPosition.z.toFixed(1)
     ) {
       _serverCall(
         `{"header":"updatePosition","data":{"x":"${currentPosition.x}", "y":"${currentPosition.y}", "z":"${currentPosition.z}"}}`
       );
+      lastSyncedPosition.x = currentPosition.x;
+      lastSyncedPosition.y = currentPosition.y;
+      lastSyncedPosition.z = currentPosition.z;
       lastSyncTime = 0;
     }
   }
@@ -457,7 +466,6 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
     initCannonJS();
     initThreeJS();
     createSkyBox();
-    createShops();
     loadLevel(() => {
       createUser({
         id: id,
@@ -470,6 +478,9 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
       createVideoWall();
       init();
       animate();
+      createShops();
+      isAppInited = true;
+      console.log(`Browser app has been inited`);
       onReady();
     });
   });
@@ -507,4 +518,8 @@ window.updatePosition = ({ id, position }) => {
   if (user) user.mesh.position.copy(position);
 };
 
-window.setShops = (shops) => (_shops = shops);
+window.setShops = (shops) => {
+  console.log(`Set shops by the server (${shops.length})`);
+  _shops = shops;
+  if (!isShopInited && isAppInited) createShops();
+};
