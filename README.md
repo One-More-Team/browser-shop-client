@@ -13,8 +13,9 @@ Available here https://browser-shop.com/
 - React + Saga + Redux for ui https://reactjs.org/
 - ThreeJS for 3D view https://threejs.org/
 - CannonJS for physic https://schteppe.github.io/cannon.js/
-- Simple Websocket for communication
-- 3D building base layout was made with Blender
+- Simple Websocket for communication http://websocket.org/
+- FireBase for sign in and up https://firebase.google.com/
+- 3D building base layout was made with Blender https://www.blender.org/
 
 # Used assets
 - Texture Haven for textures https://texturehaven.com/
