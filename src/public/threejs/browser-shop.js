@@ -2,10 +2,12 @@ import { FBXLoader } from "./lib/jsm/loaders/FBXLoader.js";
 import CapsuleGeometry from "./lib/CapsuleGeometry.js";
 
 import assetConfig from "./asset-config.js";
+import { AnimationMixer, MeshLambertMaterial } from "./build/three.module.js";
 
 const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
 
+const clock = new THREE.Clock();
 let world;
 let scene;
 let camera;
@@ -72,6 +74,10 @@ const initThreeJS = () => {
 
   var alight = new THREE.AmbientLight(0xffffff);
   scene.add(alight);
+
+  var light = new THREE.PointLight();
+  light.position.set(2.5, 7.5, 15);
+  scene.add(light);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -265,11 +271,50 @@ const createVideoWall = () => {
   scene.add(movieScreen);
 };
 
-const createUser = ({ id, name, position, isOwn, color }) => {
+const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
   let mesh = null;
   let body = null;
+  let activeAction = null;
 
-  if (isOwn) {
+  const animationActions = [];
+  const objLoader = new FBXLoader();
+  let mixer;
+
+  if (!isOwn) {
+    objLoader.load("./asset/3d/character/ybot.fbx", (object) => {
+      object.traverse((child) => {
+        if (child.isMesh && child.material) {
+          console.log(child.material);
+        }
+      });
+      object.scale.set(0.01, 0.01, 0.01);
+      object.position.set(position.x, position.y, position.z);
+      scene.add(object);
+      mixer = new AnimationMixer(object);
+
+      objLoader.load("./asset/3d/animation/Walking.fbx", (animation) => {
+        const animationAction = mixer.clipAction(animation.animations[0]);
+        animationActions.push(animationAction);
+        activeAction = animationAction;
+        activeAction.reset();
+        activeAction.play();
+
+        const geometry = CapsuleGeometry(0.6, 1, 16);
+        const material = new THREE.MeshBasicMaterial({ color: color });
+        scene.add(mesh);
+
+        const user = {
+          id,
+          name,
+          body,
+          object,
+          mixer,
+        };
+        users.push(user);
+        onComplete(user);
+      });
+    });
+  } else {
     const mass = 5;
     const radius = 1.3;
     const shape = new CANNON.Sphere(radius);
@@ -278,20 +323,16 @@ const createUser = ({ id, name, position, isOwn, color }) => {
     body.position.set(position.x, position.y, position.z);
     body.linearDamping = 0.9;
     world.add(body);
-  } else {
-    const geometry = CapsuleGeometry(0.6, 1, 16);
-    const material = new THREE.MeshBasicMaterial({ color: color });
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = Math.PI / 2;
-    scene.add(mesh);
-  }
 
-  users.push({
-    id,
-    name,
-    body,
-    mesh,
-  });
+    const user = {
+      id,
+      name,
+      body,
+      mesh,
+    };
+    users.push(user);
+    onComplete(user);
+  }
 };
 
 function init() {
@@ -417,7 +458,11 @@ function onWindowResize() {
 }
 
 const animate = () => {
+  const delta = clock.getDelta();
   requestAnimationFrame(animate);
+  users.forEach((user) => {
+    if (user.mixer) user.mixer.update(delta);
+  });
 
   world.step(1 / 60);
 
@@ -451,6 +496,11 @@ const animate = () => {
   time = Date.now();
 };
 
+const getUserColor = () => {
+  const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0x00ffff, 0xffffff];
+  return colors[users.length];
+};
+
 window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
   _serverCall = serverCall;
   loadTextures(assetConfig.textures, () => {
@@ -464,20 +514,18 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
         name: userName,
         isOwn: true,
         position: { x: 40, y: 0.5, z: 10 },
+        color: getUserColor(),
+        onComplete: (user) => {
+          controls = new PointerLockControls(camera, user.body);
+          scene.add(controls.getObject());
+          createVideoWall();
+          init();
+          animate();
+          onReady();
+        },
       });
-      controls = new PointerLockControls(camera, users[0].body);
-      scene.add(controls.getObject());
-      createVideoWall();
-      init();
-      animate();
-      onReady();
     });
   });
-};
-
-const getUserColor = () => {
-  const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0x00ffff, 0xffffff];
-  return colors[users.length];
 };
 
 window.addUsers = (users) => {
@@ -504,7 +552,7 @@ window.removeUser = (targetId) => {
 
 window.updatePosition = ({ id, position }) => {
   const user = users.find((user) => user.id === id);
-  if (user) user.mesh.position.copy(position);
+  if (user) user.object.position.copy(position);
 };
 
 window.setShops = (shops) => (_shops = shops);
