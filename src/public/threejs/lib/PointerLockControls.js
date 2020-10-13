@@ -2,10 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  * @author schteppe / https://github.com/schteppe
  */
-var PointerLockControls = function (camera, cannonBody) {
+var PointerLockControls = function (
+  camera,
+  cannonBody,
+  { velocityFactor = 0.2, sideVelocityFactor = 0.2, jumpVelocity = 20 }
+) {
   var eyeYPos = 2; // eyes are 2 meters above the ground
-  var velocityFactor = 0.2;
-  var jumpVelocity = 20;
   var scope = this;
 
   var pitchObject = new THREE.Object3D();
@@ -147,10 +149,10 @@ var PointerLockControls = function (camera, cannonBody) {
     }
 
     if (moveLeft) {
-      inputVelocity.x = -velocityFactor * delta;
+      inputVelocity.x = -sideVelocityFactor * delta;
     }
     if (moveRight) {
-      inputVelocity.x = velocityFactor * delta;
+      inputVelocity.x = sideVelocityFactor * delta;
     }
 
     // Convert velocity to world coordinates

@@ -4,11 +4,17 @@ import CapsuleGeometry from "./lib/CapsuleGeometry.js";
 import assetConfig from "./asset-config.js";
 import { AnimationMixer, MeshLambertMaterial } from "./build/three.module.js";
 
+const ANIMATION = {
+  IDLE: "ANIMATION.IDLE",
+  WALK: "ANIMATION.WALK",
+};
+
 const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
 const userCache = [];
+const animations = [];
 let world;
 let scene;
 let camera;
@@ -278,17 +284,33 @@ const createVideoWall = () => {
   scene.add(movieScreen);
 };
 
+const setAnimationAction = ({ user, animation }) => {
+  if (animation !== user.activeAnimation) {
+    user.activeAnimation = animation;
+    user.lastAction = user.activeAction;
+    user.activeAction = animations[animation];
+    if (user.lastAction) user.lastAction.fadeOut(0.2);
+    user.activeAction.reset();
+    user.activeAction.fadeIn(0.2);
+    user.activeAction.play();
+  }
+};
+
 const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
+  if (users.find((user) => user.id == id)) {
+    console.log(`Multiple user creation request for ${id}`);
+    return;
+  }
+
   if (!scene) {
     userCache.push({ id, name, position, isOwn, color, onComplete });
     return;
   }
-
+  console.log(`Create user for ${id}`);
   let mesh = null;
   let body = null;
   let activeAction = null;
 
-  const animationActions = [];
   const objLoader = new FBXLoader();
   let mixer;
 
@@ -300,30 +322,36 @@ const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
         }
       });
       object.scale.set(0.01, 0.01, 0.01);
-      object.position.set(position.x, position.y, position.z);
+      object.position.set(position.x, position.y - 1, position.z);
       scene.add(object);
       mixer = new AnimationMixer(object);
 
       objLoader.load("./asset/3d/animation/Walking.fbx", (animation) => {
-        const animationAction = mixer.clipAction(animation.animations[0]);
-        animationActions.push(animationAction);
-        activeAction = animationAction;
-        activeAction.reset();
-        activeAction.play();
+        const walkAnimationAction = mixer.clipAction(animation.animations[0]);
+        animations[ANIMATION.WALK] = walkAnimationAction;
 
-        const geometry = CapsuleGeometry(0.6, 1, 16);
-        const material = new THREE.MeshBasicMaterial({ color: color });
-        scene.add(object);
+        objLoader.load("./asset/3d/animation/Idle.fbx", (animation) => {
+          const idleAnimationAction = mixer.clipAction(animation.animations[0]);
+          animations[ANIMATION.IDLE] = idleAnimationAction;
+          activeAction = idleAnimationAction;
+          activeAction.reset();
+          activeAction.play();
 
-        const user = {
-          id,
-          name,
-          body,
-          object,
-          mixer,
-        };
-        users.push(user);
-        if (onComplete) onComplete(user);
+          const geometry = CapsuleGeometry(0.6, 1, 16);
+          const material = new THREE.MeshBasicMaterial({ color: color });
+          scene.add(object);
+
+          const user = {
+            id,
+            name,
+            body,
+            object,
+            mixer,
+            activeAnimation: "",
+          };
+          users.push(user);
+          if (onComplete) onComplete(user);
+        });
       });
     });
   } else {
@@ -341,6 +369,7 @@ const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
       name,
       body,
       mesh,
+      targetRotation: 0,
     };
     users.push(user);
     onComplete(user);
@@ -493,7 +522,7 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0 && lastSyncTime++ > 2) {
+  if (users.length > 0 && lastSyncTime++ > 5) {
     const currentPosition = {
       x: users[0].body.position.x,
       y: users[0].body.position.y,
@@ -551,7 +580,10 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
         position: { x: 40, y: 0.5, z: 10 },
         color: getUserColor(),
         onComplete: (user) => {
-          controls = new PointerLockControls(camera, user.body);
+          controls = new PointerLockControls(camera, user.body, {
+            velocityFactor: 0.25,
+            sideVelocityFactor: 0.1,
+          });
           scene.add(controls.getObject());
           createVideoWall();
           init();
@@ -582,8 +614,10 @@ window.addUsers = (users) => {
 window.removeUser = (targetId) => {
   console.log(`Remove user with id ${targetId}`);
   var user = users.find(({ id }) => id === targetId);
-  if (user) scene.remove(user.mesh);
-  else console.log(`Remove error, user not found`);
+  if (user) {
+    scene.remove(user.mesh);
+    scene.remove(user.object);
+  } else console.log(`Remove error, user not found`);
 
   users = users.filter(({ id }) => id !== targetId);
 };
@@ -591,15 +625,42 @@ window.removeUser = (targetId) => {
 window.updatePosition = ({ id, position }) => {
   const user = users.find((user) => user.id === id);
   if (user) {
-    user.object.position.copy(position);
-    const { rotation } = position;
-    var euler = new THREE.Euler(
-      0, //rotation.x,
-      rotation.y + Math.PI,
-      0, //rotation.z,
-      "XYZ"
+    const positionDiff = Math.sqrt(
+      Math.pow(user.object.position.x - position.x, 2),
+      Math.pow(user.object.position.z - position.z, 2)
     );
-    user.object.quaternion.setFromEuler(euler);
+    console.log(positionDiff);
+    if (positionDiff > 0.01)
+      setAnimationAction({ user, animation: ANIMATION.WALK });
+
+    if (user.aniamtionTimeout) clearTimeout(user.aniamtionTimeout);
+    if (user.positionTween) user.positionTween.kill();
+    user.positionTween = gsap.to(user.object.position, {
+      x: position.x,
+      y: position.y - 1,
+      z: position.z,
+      duration: 0.2,
+      ease: "linear",
+      onComplete: () => {
+        user.aniamtionTimeout = setTimeout(() => {
+          setAnimationAction({ user, animation: ANIMATION.IDLE });
+        }, 200);
+      },
+    });
+
+    const { rotation } = position;
+    gsap.to(user, {
+      targetRotation: rotation,
+      onUpdate: () => {
+        var euler = new THREE.Euler(
+          0, //rotation.x,
+          rotation.y + Math.PI,
+          0, //rotation.z,
+          "XYZ"
+        );
+        user.object.quaternion.setFromEuler(euler);
+      },
+    });
   }
 };
 
