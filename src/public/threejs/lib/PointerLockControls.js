@@ -128,14 +128,10 @@ var PointerLockControls = function (camera, cannonBody) {
     return yawObject;
   };
 
-  this.getDirection = function (targetVec) {
-    targetVec.set(0, 0, -1);
-    quat.multiplyVector3(targetVec);
-  };
-
   // Moves the camera to the Cannon.js object position and adds velocity to the object if the run key is down
   var inputVelocity = new THREE.Vector3();
   var euler = new THREE.Euler();
+  this.getDirection = () => ({ x: euler.x, y: euler.y, z: euler.z });
   this.update = function (delta) {
     if (scope.enabled === false) return;
 

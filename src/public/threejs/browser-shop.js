@@ -8,6 +8,7 @@ const USE_DEBUG_RENDERER = false;
 let debugRenderer = null;
 
 const clock = new THREE.Clock();
+const userCache = [];
 let world;
 let scene;
 let camera;
@@ -16,9 +17,11 @@ let controls;
 let time = Date.now();
 let textureAssets = {};
 let lastSyncTime = 0;
-let lastSyncedPosition = { x: 0, y: 0, z: 0 };
+let lastSyncedData = { x: 0, y: 0, z: 0, rotation: 0 };
 let _shops = [];
 let users = [];
+let isShopInited = false;
+let isAppInited = false;
 
 let video;
 let videoImage;
@@ -229,11 +232,15 @@ const createProduct = ({ position, product }) => {
 };
 
 const createShops = () => {
-  _shops.forEach(({ shelters }) => {
-    shelters.forEach((shelter) => {
-      if (shelter) createProduct(shelter);
+  if (!isShopInited && _shops.length > 0) {
+    console.log(`Creating virtual shops`);
+    isShopInited = true;
+    _shops.forEach(({ shelters }) => {
+      shelters.forEach((shelter) => {
+        if (shelter) createProduct(shelter);
+      });
     });
-  });
+  }
 };
 
 const createVideoWall = () => {
@@ -272,6 +279,11 @@ const createVideoWall = () => {
 };
 
 const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
+  if (!scene) {
+    userCache.push({ id, name, position, isOwn, color, onComplete });
+    return;
+  }
+
   let mesh = null;
   let body = null;
   let activeAction = null;
@@ -301,7 +313,7 @@ const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
 
         const geometry = CapsuleGeometry(0.6, 1, 16);
         const material = new THREE.MeshBasicMaterial({ color: color });
-        scene.add(mesh);
+        scene.add(object);
 
         const user = {
           id,
@@ -311,7 +323,7 @@ const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
           mixer,
         };
         users.push(user);
-        onComplete(user);
+        if (onComplete) onComplete(user);
       });
     });
   } else {
@@ -334,6 +346,13 @@ const createUser = ({ id, name, position, isOwn, color, onComplete }) => {
     onComplete(user);
   }
 };
+
+function checkCache() {
+  while (userCache.length > 0) {
+    createUser(userCache[userCache.length - 1]);
+    userCache.pop();
+  }
+}
 
 function init() {
   var blocker = document.getElementById("blocker");
@@ -474,20 +493,36 @@ const animate = () => {
   controls.update(Date.now() - time);
   renderer.render(scene, camera);
 
-  if (users.length > 0 /* && lastSyncTime++ > 1 */) {
+  if (users.length > 0 && lastSyncTime++ > 2) {
     const currentPosition = {
       x: users[0].body.position.x,
       y: users[0].body.position.y,
       z: users[0].body.position.z,
     };
+    const currentRotation = controls.getDirection();
     if (
-      lastSyncedPosition.x != currentPosition.x ||
-      lastSyncedPosition.y != currentPosition.y ||
-      lastSyncedPosition.z != currentPosition.z
+      lastSyncedData.x.toFixed(1) != currentPosition.x.toFixed(1) ||
+      lastSyncedData.y.toFixed(1) != currentPosition.y.toFixed(1) ||
+      lastSyncedData.z.toFixed(1) != currentPosition.z.toFixed(1) ||
+      lastSyncedData.rotation.x.toFixed(2) != currentRotation.x.toFixed(2) ||
+      lastSyncedData.rotation.y.toFixed(2) != currentRotation.y.toFixed(2) ||
+      lastSyncedData.rotation.z.toFixed(2) != currentRotation.z.toFixed(2)
     ) {
       _serverCall(
-        `{"header":"updatePosition","data":{"x":"${currentPosition.x}", "y":"${currentPosition.y}", "z":"${currentPosition.z}"}}`
+        JSON.stringify({
+          header: "updatePosition",
+          data: {
+            x: currentPosition.x,
+            y: currentPosition.y,
+            z: currentPosition.z,
+            rotation: currentRotation,
+          },
+        })
       );
+      lastSyncedData.x = currentPosition.x;
+      lastSyncedData.y = currentPosition.y;
+      lastSyncedData.z = currentPosition.z;
+      lastSyncedData.rotation = currentRotation;
       lastSyncTime = 0;
     }
   }
@@ -506,8 +541,8 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
   loadTextures(assetConfig.textures, () => {
     initCannonJS();
     initThreeJS();
+    checkCache();
     createSkyBox();
-    createShops();
     loadLevel(() => {
       createUser({
         id: id,
@@ -521,6 +556,9 @@ window.startBrowserShop = ({ serverCall, onReady, userName, id = "ownId" }) => {
           createVideoWall();
           init();
           animate();
+          createShops();
+          isAppInited = true;
+          console.log(`Browser app has been inited`);
           onReady();
         },
       });
@@ -552,7 +590,21 @@ window.removeUser = (targetId) => {
 
 window.updatePosition = ({ id, position }) => {
   const user = users.find((user) => user.id === id);
-  if (user) user.object.position.copy(position);
+  if (user) {
+    user.object.position.copy(position);
+    const { rotation } = position;
+    var euler = new THREE.Euler(
+      0, //rotation.x,
+      rotation.y + Math.PI,
+      0, //rotation.z,
+      "XYZ"
+    );
+    user.object.quaternion.setFromEuler(euler);
+  }
 };
 
-window.setShops = (shops) => (_shops = shops);
+window.setShops = (shops) => {
+  console.log(`Set shops by the server (${shops.length})`);
+  _shops = shops;
+  if (!isShopInited && isAppInited) createShops();
+};
